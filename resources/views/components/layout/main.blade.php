@@ -15,11 +15,18 @@
     <body>
         <header>
             <div class="container border-bottom pb-2">
-                Logo
+                <a href="/">Logo</a>
             </div>
         </header>
         <div>
             <div class="container py-2">
+                @if(session('alert'))
+                    <div class="alert alert-success d-flex align-items-center" role="alert">
+                        <div>
+                            {{ session('alert') }}
+                        </div>
+                    </div>
+                @endif
                 <h1>{{ $h1 }}</h1>
                 {{ $slot }}
             </div>

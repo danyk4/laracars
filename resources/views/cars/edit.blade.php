@@ -6,9 +6,13 @@
             @method('PATCH')
             @csrf
             <div class="mb-3 ">
-                <x-label for="brand" class="form-label"/>
-                <x-input name="brand" class="form-control" value="{{ $car->brand }}"/>
-                <x-error field="brand" class="text-danger fs-6"/>
+                <x-label for="brand_id" class="form-label"/>
+                <x-form.select name="brand_id" label="Brand" :options="$brands" :selected="$car->brand->id"/>
+                @error('brand_id')
+                <div class="text-danger fs-6">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
 
             <div class="mb-3 ">
@@ -27,6 +31,25 @@
                 <x-label for="transmission" class="form-label"/>
                 <x-form.select name="transmission" label="Коробка передач" :options="$transmission" :selected="$car->transmission"/>
                 @error('transmission')
+                <div class="text-danger fs-6">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <x-label for="tags" class="form-label"/>
+                {{--                <x-form.selectmulti name="tags[]" label="Tags" :options="$tags" multiple="" size="{{  $tags->count() }}" :selected="$defaultTags"/>--}}
+                <select name="tags[]" label="Tags" multiple="" value="{{ $tags }}" size="{{ $tags->count() }}" class="form-control">
+                    @foreach ($tags as $key => $tag)
+                        @if(\Str::contains($defaultTags, $key))
+                            <option value="{{ $key }}" selected>{{ $tag }}</option>
+                        @else
+                            <option value="{{ $key }}">{{ $tag }}</option>
+                        @endif
+                    @endforeach
+                </select>
+                @error('tags')
                 <div class="text-danger fs-6">
                     {{ $message }}
                 </div>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
@@ -13,4 +14,8 @@ Route::get('/posts/{id}/edit', [PostController::class, 'edit'])->name('posts.edi
 Route::patch('/posts/{id}', [PostController::class, 'update'])->name('posts.update');
 Route::delete('/posts/{id}', [PostController::class, 'destroy'])->name('posts.destroy');
 
+Route::get('cars/trashed', [CarController::class, 'trashed'])->name('cars.trashed');
+Route::patch('cars/{car}/restore', [CarController::class, 'restore'])->name('cars.restore');
 Route::resource('cars', CarController::class);
+
+Route::resource('brands', BrandController::class);

@@ -26,26 +26,30 @@ class SaveCarRequest extends FormRequest
         $transmission = config('app-cars.transmission');
 
         return [
-          'brand'        => 'required|min:2|max:64',
-          'model'        => 'required|min:2|max:64',
+            'brand_id'     => 'required|integer|exists:brands,id',
+            'model'        => 'required|min:2|max:64',
             //'vin'          => 'required|min:4|max:14|unique:cars,vin',
-          'vin'          => ['required', 'min:4', 'max:14', $this->vinUniqueRule()],
-          'transmission' => ['required', Rule::in(array_keys($transmission))],
+            'vin'          => ['required', 'min:4', 'max:14', $this->vinUniqueRule()],
+            'transmission' => ['required', Rule::in(array_keys($transmission))],
+            'tags'         => 'array',
+            'tags.*'       => 'integer|exists:tags,id',
         ];
     }
 
     public function attributes()
     {
         return [
-          'brand'        => 'Марка',
-          'model'        => 'Модель',
-          'vin'          => 'Vin номер',
-          'transmission' => 'Коробка передач',
+            'brand_id'     => 'Марка',
+            'model'        => 'Модель',
+            'vin'          => 'Vin номер',
+            'transmission' => 'Коробка передач',
+            'tags'         => 'Теги',
         ];
     }
 
     protected function vinUniqueRule()
     {
-        return Rule::unique(Car::class, 'vin');
+        return Rule::unique(Car::class, 'vin')->whereNull('deleted_at');
+        //return Rule::unique(Car::class, 'vin');
     }
 }

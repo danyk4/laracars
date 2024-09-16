@@ -2,9 +2,13 @@
     <div class="row">
         <x-form action="{{ route('cars.store') }}" class="col-md-6">
             <div class="mb-3 ">
-                <x-label for="brand" class="form-label"/>
-                <x-input name="brand" class="form-control"/>
-                <x-error field="brand" class="text-danger fs-6"/>
+                <x-label for="brand_id" class="form-label"/>
+                <x-form.select name="brand_id" label="Brand" :options="$brands"/>
+                @error('brand_id')
+                <div class="text-danger fs-6">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
 
             <div class="mb-3 ">
@@ -23,6 +27,18 @@
                 <x-label for="transmission" class="form-label"/>
                 <x-form.select name="transmission" label="Коробка передач" :options="$transmission"/>
                 @error('transmission')
+                <div class="text-danger fs-6">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                {{--                @foreach($cars->tags as $tag)--}}
+                {{--                <x-checkbox name="tags" class="form-label"/>--}}
+                <x-label for="tags" class="form-label"/>
+                <x-form.select name="tags[]" label="Tags" :options="$tags" multiple="" size="{{  $tags->count() }}"/>
+                @error('tags')
                 <div class="text-danger fs-6">
                     {{ $message }}
                 </div>
