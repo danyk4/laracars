@@ -14,6 +14,7 @@
                         <span class="btn btn-danger btn-sm me-1 mb-1"> {{ $tag->title }}</span>
                     @endforeach
                 </div>
+                <div>{{ $car->status->text() }}</div>
                 <a class="d-block" href="{{ route('cars.edit', [$car->id]) }}">Edit</a>
             </div>
         @endforeach

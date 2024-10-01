@@ -59,13 +59,18 @@
             <div class="d-inline-flex gap-2">
                 <a class="btn btn-secondary" href="/cars/{{ $car->id }}">Cancel</a>
                 <button class="btn btn-primary" type="submit">Update</button>
-                <button class="btn btn-danger" form="delete-form" type="submit">Delete</button>
+                @if($car->canDelete)
+                    <button class="btn btn-danger" form="delete-form" type="submit">Delete</button>
+                @endif
+
             </div>
         </x-form>
     </div>
 
-    <x-form method="POST" action="{{ route('cars.destroy', [$car->id]) }}" id="delete-form" class="hidden">
-        @csrf
-        @method('DELETE')
-    </x-form>
+    @if($car->canDelete)
+        <x-form method="POST" action="{{ route('cars.destroy', [$car->id]) }}" id="delete-form" class="hidden">
+            @csrf
+            @method('DELETE')
+        </x-form>
+    @endif
 </x-layout.main>

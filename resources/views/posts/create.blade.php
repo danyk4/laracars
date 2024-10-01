@@ -1,7 +1,7 @@
 <x-layout.main title="Add Post">
     <h2>Add Post</h2>
 
-    <form method="POST" action="/posts">
+    <form method="POST" action="{{ route('posts.store') }}">
         @csrf
         <div>
             <label for="title">Title</label>

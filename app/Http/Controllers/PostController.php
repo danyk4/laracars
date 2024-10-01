@@ -7,9 +7,11 @@ use App\Models\Post;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->authorizeResource(Post::class);
+    }
+
     public function index()
     {
         $posts = Post::all();
@@ -17,67 +19,41 @@ class PostController extends Controller
         return view('posts.index', compact('posts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('posts.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(SavePostRequest $request)
     {
-//        $fields = $request->validate([
-//          'title'   => 'required|min:5|max:255',
-//          'content' => 'required',
-//        ]);
-        $post = Post::create($request->validated());
+        $post          = Post::make($request->validated());
+        $post->user_id = auth()->id();
+        $post->save();
 
-        return redirect(route('posts.show', [$post->id]));
+        return redirect(route('posts.index'));
     }
 
-    /**
-     * Display the specified resource
-     */
-    public function show(string $id)
+    public function show(Post $post)
     {
-        $post = Post::findOrFail($id);
-
         return view('posts.show', compact('post'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Post $post)
     {
-        $post = Post::findOrFail($id);
-
         return view('posts.edit', compact('post'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(SavePostRequest $request, string $id)
+    public function update(SavePostRequest $request, Post $post)
     {
-        $post = Post::findOrFail($id);
-
         $post->update($request->validated()); // if use fillable, otherwise use fill() and save()
 
-        return redirect()->route('posts.show', [$post->id]);
+        return redirect()->route('posts.show', compact('post'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
-        Post::where('id', $id)->delete();
+        $post->delete();
 
-        return redirect('/posts');
+        return redirect()->route('posts.index');
     }
 }

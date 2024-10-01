@@ -4,6 +4,6 @@
         {{ $post->content }}
     </div>
     <div>
-        <a href="/posts/{{ $post->id }}/edit">Edit</a>
+        <a href="{{ route('posts.edit', [$post->id]) }}">Edit</a>
     </div>
 </x-layout.main>

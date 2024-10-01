@@ -2,19 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\Cars\Status;
 use App\Http\Requests\Cars\SaveCarRequest;
 use App\Http\Requests\Cars\UpdateCarRequest;
 use App\Models\Brand;
 use App\Models\Car;
 use App\Models\Tag;
+use App\Sevices\AddressParser\ParserInterface;
 use Illuminate\Support\Facades\DB;
 
 class CarController extends Controller
 {
+    public function __construct(protected ParserInterface $dadataParser)
+    {
+    }
+
     public function index()
     {
-        $cars = Car::with('brand.country', 'tags')->where('status', Status::ACTIVE)->orderByDesc('created_at')->get();
+        //dd($this->dadataParser->clean("ногинск 8-я молзинская 14"));
+
+        //$cars = Car::with('brand.country', 'tags')->where('status', Status::ACTIVE)->orderByDesc('created_at')->get();
+        $cars = Car::with('brand.country', 'tags')->orderByDesc('created_at')->get();
+
+        //$cars = Car::ofActive()->get();
 
         return view('cars.index', compact('cars'));
     }
@@ -90,9 +99,13 @@ class CarController extends Controller
      */
     public function destroy(Car $car)
     {
-        $car->delete();
+        if ($car->canDelete) {
+            $car->delete();
 
-        return redirect()->route('cars.index')->with('alert', trans('notifications.cars.deleted'));
+            return redirect()->route('cars.index')->with('alert', trans('notifications.cars.deleted'));
+        }
+
+        return redirect()->route('cars.show', [$car->id])->with('alert', trans('Change status for deleting'));
     }
 
     public function trashed()
